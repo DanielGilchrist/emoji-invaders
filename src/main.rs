@@ -21,31 +21,43 @@ fn main() {
     termion::cursor::Goto(x_pos, y_pos),
     termion::cursor::Hide).unwrap();
 
-  stdout.flush().unwrap();
+  flush(&mut stdout);
 
   for c in stdin.keys() {
-    write!(stdout, "{}{}{}",
-      termion::cursor::Goto(x_pos, y_pos),
-      termion::clear::CurrentLine,
-      PLAYER).unwrap();
+    draw_player(&mut stdout, x_pos, y_pos);
 
-    stdout.flush().unwrap();
+    flush(&mut stdout);
 
     match c.unwrap() {
       Key::Char('q') => break,
-      Key::Left      => move_c(&mut x_pos, false),
-      Key::Right     => move_c(&mut x_pos, true),
+      Key::Left      => move_left(&mut x_pos),
+      Key::Right     => move_right(&mut x_pos),
       _              => ()
     };
   }
 
-  write!(stdout, "{}", termion::cursor::Show).unwrap();
+  // reset terminal
+  write!(stdout, "{}{}{}",
+    termion::clear::All,
+    termion::cursor::Goto(0, 0),
+    termion::cursor::Show).unwrap();
 }
 
-fn move_c(pos: &mut u16, moving_right: bool) {
-  if moving_right {
-    *pos += 1;
-  } else {
-    *pos -= 1;
-  }
+fn move_left(pos: &mut u16) {
+  *pos -= 1;
+}
+
+fn move_right(pos: &mut u16) {
+  *pos += 1;
+}
+
+fn draw_player(stdout: &mut std::io::Stdout, x_pos: u16, y_pos: u16) {
+  write!(stdout, "{}{}{}",
+    termion::cursor::Goto(x_pos, y_pos),
+    termion::clear::CurrentLine,
+    PLAYER).unwrap();
+}
+
+fn flush(stdout: &mut std::io::Stdout) {
+  stdout.flush().unwrap();
 }
