@@ -23,17 +23,16 @@ fn main() {
 
   flush(&mut stdout);
 
+
   for c in stdin.keys() {
-    draw_player(&mut stdout, x_pos, y_pos);
-
-    flush(&mut stdout);
-
     match c.unwrap() {
       Key::Char('q') => break,
       Key::Left      => move_left(&mut x_pos),
       Key::Right     => move_right(&mut x_pos),
       _              => ()
     };
+
+    draw_player(&mut stdout, x_pos, y_pos);
   }
 
   // reset terminal
@@ -56,6 +55,8 @@ fn draw_player(stdout: &mut std::io::Stdout, x_pos: u16, y_pos: u16) {
     termion::cursor::Goto(x_pos, y_pos),
     termion::clear::CurrentLine,
     PLAYER).unwrap();
+
+  flush(stdout);
 }
 
 fn flush(stdout: &mut std::io::Stdout) {
