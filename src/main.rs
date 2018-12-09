@@ -23,6 +23,8 @@ fn main() {
 
   flush(&mut stdout);
 
+  // init player
+  draw_player(&mut stdout, x_pos, y_pos);
 
   for c in stdin.keys() {
     match c.unwrap() {
