@@ -13,12 +13,9 @@ use std::io::{Write, Stdout, stdout, stdin};
 fn main() {
   let stdin = stdin();
   let mut stdout = stdout().into_raw_mode().unwrap();
-
   let (x, y) = termion::terminal_size().unwrap();
-
   let x_pos: u16 = x / 2;
   let y_pos: u16 = y - (y / 8);
-
   let mut player = Player::new(x_pos, y_pos);
 
   setup(&player, &mut stdout);
