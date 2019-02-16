@@ -1,11 +1,14 @@
 extern crate termion;
 
-use termion::event::Key;
+mod entities;
+use entities::player::{Player};
+
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
-use std::io::{Write, stdout, stdin};
-
-static PLAYER: &'static str = "/\\";
+use termion::event::Key;
+use termion::cursor::{Goto, Show, Hide};
+use termion::clear::{All};
+use std::io::{Write, Stdout, stdout, stdin};
 
 fn main() {
   let stdin = stdin();
@@ -13,54 +16,47 @@ fn main() {
 
   let (x, y) = termion::terminal_size().unwrap();
 
-  let mut x_pos: u16 = x / 2;
+  let x_pos: u16 = x / 2;
   let y_pos: u16 = y - (y / 8);
 
-  write!(stdout, "{}{}{}",
-    termion::clear::All,
-    termion::cursor::Goto(x_pos, y_pos),
-    termion::cursor::Hide).unwrap();
+  let mut player = Player::new(x_pos, y_pos);
 
-  flush(&mut stdout);
-
-  // init player
-  draw_player(&mut stdout, x_pos, y_pos);
+  setup(&player, &mut stdout);
 
   for c in stdin.keys() {
     match c.unwrap() {
       Key::Char('q') => break,
-      Key::Left      => move_left(&mut x_pos),
-      Key::Right     => move_right(&mut x_pos),
+      Key::Left      => player.move_left(),
+      Key::Right     => player.move_right(),
       _              => ()
     };
 
-    draw_player(&mut stdout, x_pos, y_pos);
+    player.draw(&mut stdout);
   }
 
-  // reset terminal
-  write!(stdout, "{}{}{}",
-    termion::clear::All,
-    termion::cursor::Goto(0, 0),
-    termion::cursor::Show).unwrap();
+  reset(&mut stdout);
 }
 
-fn move_left(pos: &mut u16) {
-  *pos -= 1;
-}
+fn setup(player: &Player, stdout: &mut Stdout) {
+  write!(
+    stdout,
+    "{}{}{}",
+    All,
+    Goto(player.x_pos(), player.y_pos()),
+    Hide
+  ).unwrap();
 
-fn move_right(pos: &mut u16) {
-  *pos += 1;
-}
-
-fn draw_player(stdout: &mut std::io::Stdout, x_pos: u16, y_pos: u16) {
-  write!(stdout, "{}{}{}",
-    termion::cursor::Goto(x_pos, y_pos),
-    termion::clear::CurrentLine,
-    PLAYER).unwrap();
-
-  flush(stdout);
-}
-
-fn flush(stdout: &mut std::io::Stdout) {
   stdout.flush().unwrap();
+
+  player.draw(stdout);
+}
+
+fn reset(stdout: &mut Stdout) {
+  write!(
+    stdout,
+    "{}{}{}",
+    All,
+    Goto(0, 0),
+    Show
+  ).unwrap();
 }
