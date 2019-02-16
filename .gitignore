@@ -100,3 +100,10 @@ fabric.properties
 
 # Sonarlint plugin
 .idea/sonarlint
+
+# Other
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/rust-invaders.iml
+.idea/vcs.xml
