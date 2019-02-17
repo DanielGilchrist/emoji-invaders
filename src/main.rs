@@ -6,8 +6,9 @@ use entities::player::{Player};
 use termion::input::TermRead;
 use termion::raw::IntoRawMode;
 use termion::event::Key;
-use termion::cursor::{Goto, Show, Hide};
-use termion::clear::{All};
+use termion::cursor::{Goto, Hide};
+use termion::clear::{All as ClearAll};
+use termion::style::{Reset};
 use std::io::{Write, Stdout, stdout, stdin};
 
 fn main() {
@@ -38,7 +39,7 @@ fn setup(player: &Player, stdout: &mut Stdout) {
   write!(
     stdout,
     "{}{}{}",
-    All,
+    ClearAll,
     Goto(player.x_pos(), player.y_pos()),
     Hide
   ).unwrap();
@@ -52,8 +53,8 @@ fn reset(stdout: &mut Stdout) {
   write!(
     stdout,
     "{}{}{}",
-    All,
-    Goto(0, 0),
-    Show
+    ClearAll,
+    Reset,
+    Goto(1, 1),
   ).unwrap();
 }
