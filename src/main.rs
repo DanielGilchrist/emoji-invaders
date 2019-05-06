@@ -47,8 +47,6 @@ impl Game {
     ).unwrap();
 
     self.stdout.flush().unwrap();
-
-    self.player.draw(&mut self.stdout);
   }
 
   fn reset(&mut self) {
