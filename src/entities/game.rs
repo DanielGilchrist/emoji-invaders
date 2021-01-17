@@ -72,8 +72,8 @@ impl Game {
         Some(Ok(Key::Char('q'))) => break,
         Some(Ok(Key::Left))      => self.player.move_left(),
         Some(Ok(Key::Right))     => self.player.move_right(),
-        None                     => (),
-        _                        => ()
+        Some(Ok(Key::Up))        => self.player.fire(game),
+        None | _                 => (),
       };
 
       self.player.draw(&mut self.stdout);
