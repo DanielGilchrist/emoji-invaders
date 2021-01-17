@@ -4,7 +4,7 @@ use termion::cursor::{Goto};
 use termion::clear::{CurrentLine};
 use std::io::{Write, Stdout};
 
-static BODY: &'static str = "/\\";
+static BODY: &str = "🚀";
 static SPEED: u8 = 1;
 
 pub struct Player {

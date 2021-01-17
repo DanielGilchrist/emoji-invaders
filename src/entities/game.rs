@@ -14,10 +14,10 @@ use termion::clear::{All as ClearAll};
 use termion::style::{Reset};
 
 pub struct Game {
-  stdin: AsyncReader,
-  stdout: RawTerminal<Stdout>,
-  pub player: Player,
-  pub bullet: Option<Bullet>,
+  stdin:       AsyncReader,
+  stdout:      RawTerminal<Stdout>,
+  pub player:  Player,
+  pub bullets: Vec<Bullet>,
 }
 
 impl Game {
@@ -28,13 +28,13 @@ impl Game {
     let x_pos: u16 = x / 2;
     let y_pos: u16 = y - (y / 8);
     let player = Player::new(x_pos, y_pos);
-    let bullet = None::<Bullet>;
+    let bullets: Vec<Bullet> = Vec::new();
 
     Game {
       stdin,
       stdout,
       player,
-      bullet,
+      bullets,
     }
   }
 
@@ -61,9 +61,9 @@ impl Game {
   }
 
   pub fn main_loop(&mut self) {
-    let stdin = &mut self.stdin;
-
     loop {
+      let stdin = &mut self.stdin;
+
       // keeps shit smoooooth
       sleep(Duration::from_millis(10));
 
@@ -72,12 +72,33 @@ impl Game {
         Some(Ok(Key::Char('q'))) => break,
         Some(Ok(Key::Left))      => self.player.move_left(),
         Some(Ok(Key::Right))     => self.player.move_right(),
-        Some(Ok(Key::Up))        => self.player.fire(game),
-        None | _                 => (),
+        _                        => (),
       };
 
-      self.player.draw(&mut self.stdout);
+      self.update_all();
+      self.draw_all();
+    }
+  }
 
+  fn update_all(&mut self) {
+    let mut destroy_indices: Vec<usize> = Vec::new();
+
+    for bullet in self.bullets.iter_mut() {
+      bullet.update();
+      if bullet.should_destroy() {
+        destroy_indices.push(bullet.index());
+      }
+    }
+
+    for index in destroy_indices.iter() {
+      self.bullets.remove(index.to_owned());
+    }
+  }
+
+  fn draw_all(&mut self) {
+    self.player.draw(&mut self.stdout);
+    for bullet in self.bullets.iter_mut() {
+      bullet.draw(&mut self.stdout);
     }
   }
 }
