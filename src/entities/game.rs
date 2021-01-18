@@ -1,17 +1,24 @@
-use entities::player::{Player};
-use entities::bullet::{Bullet};
+use entities::{
+  bullet::Bullet,
+  player::Player,
+};
 
-use std::io::{Write, Stdout, stdout};
-use std::time::{Duration};
-use std::thread::{sleep};
+use std::{
+  io::{Write, Stdout, stdout},
+  time::Duration,
+  thread::sleep,
+};
 
-use termion::{AsyncReader, async_stdin};
-use termion::input::{TermRead};
-use termion::raw::{IntoRawMode, RawTerminal};
-use termion::event::{Key};
-use termion::cursor::{Goto, Hide};
-use termion::clear::{All as ClearAll};
-use termion::style::{Reset};
+use termion::{
+  AsyncReader,
+  async_stdin,
+  clear::All as ClearAll,
+  cursor::{Goto, Hide},
+  event::Key,
+  input::TermRead,
+  raw::{IntoRawMode, RawTerminal},
+  style::Reset,
+};
 
 pub struct Game {
   stdin:       AsyncReader,

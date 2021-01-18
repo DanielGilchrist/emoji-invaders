@@ -1,7 +1,7 @@
 extern crate termion;
 
 mod entities;
-use entities::game::{Game};
+use entities::game::Game;
 
 fn main() {
   let mut game = Game::new();

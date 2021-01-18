@@ -1,8 +1,11 @@
 extern crate termion;
 
-use termion::cursor::{Goto};
-use termion::clear::{CurrentLine, All as ClearAll};
 use std::io::{Write, Stdout};
+
+use termion::{
+  clear::{CurrentLine, All as ClearAll},
+  cursor::Goto,
+};
 
 static BODY: &str = "•";
 static SPEED: u8 = 1;
