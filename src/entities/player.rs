@@ -1,10 +1,13 @@
 extern crate termion;
 
-use termion::cursor::{Goto};
-use termion::clear::{CurrentLine};
 use std::io::{Write, Stdout};
 
-static BODY: &'static str = "/\\";
+use termion::{
+  clear::CurrentLine,
+  cursor::Goto,
+};
+
+static BODY: &str = "🚀";
 static SPEED: u8 = 1;
 
 pub struct Player {
